@@ -1,11 +1,4 @@
-﻿#if !UNITY_EDITOR && UNITY_IOS
-#define ENABLE_IOS
-#elif !UNITY_EDITOR && UNITY_ANDROID
-#define ENABLE_ANDROID
-#endif
-
-using System;
-using System.Diagnostics;
+﻿using System;
 using UnityEngine;
 
 namespace Kogane
@@ -50,15 +43,21 @@ namespace Kogane
         /// </summary>
         public readonly void OpenURL()
         {
-            OpeniOS();
-            OpenAndroid();
+            switch ( Application.platform )
+            {
+                case RuntimePlatform.IPhonePlayer:
+                    OpeniOS();
+                    return;
+                case RuntimePlatform.Android:
+                    OpenAndroid();
+                    return;
+            }
         }
 
         /// <summary>
         /// iOS でストアページを開きます
         /// </summary>
-        [Conditional( "ENABLE_IOS" )]
-        private readonly void OpeniOS()
+        public readonly void OpeniOS()
         {
             Application.OpenURL( m_iosUrl );
         }
@@ -66,8 +65,7 @@ namespace Kogane
         /// <summary>
         /// Android でストアページを開きます
         /// </summary>
-        [Conditional( "ENABLE_ANDROID" )]
-        private readonly void OpenAndroid()
+        public readonly void OpenAndroid()
         {
             Application.OpenURL( m_androidUrl );
         }
